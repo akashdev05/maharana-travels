@@ -61,7 +61,7 @@ return [
     'cities' => [
         'Delhi', 'Mumbai', 'Chandigarh', 'Amritsar', 'Ludhiana', 'Shimla', 'Manali',
         'Mohali', 'Patiala', 'Jalandhar', 'Pathankot', 'Kharar', 'Zirakpur', 'Noida',
-        'Gurgaon', 'Haridwar', 'Rishikesh', 'Dehradun', 'Ambala', 'Ghaziabad', 'Delhi Airport',
+        'Gurgaon', 'Haridwar', 'Rishikesh', 'Dehradun', 'Ambala', 'Ghaziabad', 'Delhi Airport', 'Ramgarh',
         'Jammu', 'Jaipur',
     ],
     'route_prices' => [
@@ -472,6 +472,7 @@ return [
         ],
     ],
     'services' => [
+        ['id' => 19, 'title' => 'Chandigarh to Delhi Taxi | One Way & Round Trip Cab', 'slug' => 'chandigarh-to-delhi', 'from' => 'Chandigarh', 'to' => 'Delhi', 'km' => 245],
         ['id' => 1, 'title' => 'Delhi to Shimla Taxi | Cheap & Reliable Cab', 'slug' => 'delhi-to-shimla', 'from' => 'Delhi', 'to' => 'Shimla', 'km' => 345],
         ['id' => 2, 'title' => 'Delhi to Kasol Taxi | One Way & Round Trip Cabs', 'slug' => 'delhi-to-kasol', 'from' => 'Delhi', 'to' => 'Kasol', 'km' => 520],
         ['id' => 3, 'title' => 'Gurgaon to Manali Taxi | One Way & Round Trip', 'slug' => 'gurgaon-to-manali', 'from' => 'Gurgaon', 'to' => 'Manali', 'km' => 550],

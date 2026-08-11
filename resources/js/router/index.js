@@ -14,6 +14,7 @@ const AboutPage = () => import('../pages/AboutPage.vue')
 const ContactPage = () => import('../pages/ContactPage.vue')
 const CitiesPage = () => import('../pages/CitiesPage.vue')
 const WeddingPage = () => import('../pages/WeddingPage.vue')
+const LocalLandingPage = () => import('../pages/LocalLandingPage.vue')
 const NotFound = () => import('../pages/NotFound.vue')
 
 const routes = [
@@ -23,10 +24,31 @@ const routes = [
     name: 'home',
     meta: {
       seo: {
-        title: 'Maharana Travels | Cab Booking & Taxi Service in North India',
-        description: 'Book Maharana Travels for one way cabs, round trips, airport transfers and outstation taxi service with verified drivers and transparent fares.',
+        title: 'Taxi Service in Chandigarh Tricity | Maharana Travels',
+        description: 'Book Maharana Travels for taxi and tour travel services in Zirakpur, Chandigarh, Mohali, Panchkula and Ramgarh, plus airport and outstation cabs.',
       },
     },
+  },
+  {
+    path: '/taxi-service-chandigarh', component: LocalLandingPage, name: 'taxi-chandigarh', meta: { landing: 'chandigarh' },
+  },
+  {
+    path: '/taxi-service-zirakpur', component: LocalLandingPage, name: 'taxi-zirakpur', meta: { landing: 'zirakpur' },
+  },
+  {
+    path: '/taxi-service-mohali', component: LocalLandingPage, name: 'taxi-mohali', meta: { landing: 'mohali' },
+  },
+  {
+    path: '/taxi-service-panchkula', component: LocalLandingPage, name: 'taxi-panchkula', meta: { landing: 'panchkula' },
+  },
+  {
+    path: '/taxi-service-ramgarh', component: LocalLandingPage, name: 'taxi-ramgarh', meta: { landing: 'ramgarh' },
+  },
+  {
+    path: '/chandigarh-airport-taxi', component: LocalLandingPage, name: 'chandigarh-airport-taxi', meta: { landing: 'chandigarh-airport' },
+  },
+  {
+    path: '/delhi-airport-taxi', component: LocalLandingPage, name: 'delhi-airport-taxi', meta: { landing: 'delhi-airport' },
   },
   {
     path: '/search',
@@ -127,7 +149,7 @@ const routes = [
     path: '/:pathMatch(.*)*',
     component: NotFound,
     name: 'not-found',
-    meta: { seo: { title: 'Page Not Found | Maharana Travels', description: 'The page you are looking for could not be found.', robots: 'noindex, follow' } },
+    meta: { seo: { title: 'Page Not Found | Maharana Travels', description: 'The page you are looking for could not be found.', robots: 'noindex, follow', canonical: false, business: false } },
   },
 ]
 

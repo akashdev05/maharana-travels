@@ -1,7 +1,8 @@
 const SITE_NAME = 'Maharana Travels'
-const SITE_URL = window.location.origin
+const serverCanonical = document.querySelector('link[rel="canonical"]')?.href
+const SITE_URL = serverCanonical ? new URL(serverCanonical).origin : window.location.origin
 const DEFAULT_IMAGE = '/images/logo-180.webp'
-const DEFAULT_DESCRIPTION = 'Book reliable taxi service with Maharana Travels for one way cabs, round trips, airport transfers and outstation taxi across North India.'
+const DEFAULT_DESCRIPTION = 'Book reliable taxi service with Maharana Travels for Chandigarh Tricity, airport transfers and outstation travel.'
 
 function absoluteUrl(path = '/') {
   if (/^https?:\/\//i.test(path)) return path
@@ -10,6 +11,11 @@ function absoluteUrl(path = '/') {
 
 function setMeta(selector, attributes) {
   let tag = document.head.querySelector(selector)
+
+  if (attributes.content === null) {
+    tag?.remove()
+    return
+  }
 
   if (!tag) {
     tag = document.createElement('meta')
@@ -23,6 +29,11 @@ function setMeta(selector, attributes) {
 
 function setLink(rel, href) {
   let tag = document.head.querySelector(`link[rel="${rel}"]`)
+
+  if (!href) {
+    tag?.remove()
+    return
+  }
 
   if (!tag) {
     tag = document.createElement('link')
@@ -55,12 +66,13 @@ export function businessSchema() {
   return {
     '@context': 'https://schema.org',
     '@type': 'TaxiService',
+    '@id': absoluteUrl('/#business'),
     name: SITE_NAME,
     url: SITE_URL,
     image: absoluteUrl(DEFAULT_IMAGE),
     telephone: '+91 9416198045',
     email: 'maharanatravels0001@gmail.com',
-    areaServed: ['Punjab', 'Delhi NCR', 'Himachal Pradesh', 'Uttarakhand', 'North India'],
+    areaServed: ['Zirakpur', 'Chandigarh', 'Mohali', 'Panchkula', 'Ramgarh', 'Chandigarh Tricity', 'Delhi NCR', 'Himachal Pradesh', 'Uttarakhand'],
     address: {
       '@type': 'PostalAddress',
       streetAddress: 'Shop No 7, Juneja Square, Highland Marg',
@@ -89,6 +101,21 @@ export function faqSchema(faqs = []) {
   }
 }
 
+export function breadcrumbSchema(items = []) {
+  if (!items.length) return null
+
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: items.map((item, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      name: item.name,
+      item: absoluteUrl(item.path),
+    })),
+  }
+}
+
 export function serviceSchema(service) {
   if (!service) return null
 
@@ -96,8 +123,8 @@ export function serviceSchema(service) {
     '@context': 'https://schema.org',
     '@type': 'Service',
     name: service.title,
-    serviceType: 'Outstation taxi service',
-    provider: businessSchema(),
+    serviceType: service.serviceType || 'Outstation taxi service',
+    provider: { '@id': absoluteUrl('/#business') },
     areaServed: [service.from, service.to],
     description: `Book ${service.from} to ${service.to} taxi with Maharana Travels. One way and round trip cabs with verified drivers, clean vehicles and transparent fares.`,
   }
@@ -107,7 +134,7 @@ export function updateSeo(seo = {}) {
   const title = seo.title || `${SITE_NAME} | Cab Booking | Taxi Service`
   const description = seo.description || DEFAULT_DESCRIPTION
   const path = seo.path || window.location.pathname
-  const canonical = absoluteUrl(path)
+  const canonical = seo.canonical === false ? null : absoluteUrl(path)
   const image = absoluteUrl(seo.image || DEFAULT_IMAGE)
   const type = seo.type || 'website'
 
@@ -128,5 +155,6 @@ export function updateSeo(seo = {}) {
   setLink('canonical', canonical)
 
   setJsonLd('route-jsonld', seo.schema || null)
-  setJsonLd('business-jsonld', seo.business === false ? null : businessSchema())
+  const serverHasBusinessSchema = document.getElementById('server-jsonld')?.textContent.includes('TaxiService')
+  setJsonLd('business-jsonld', seo.business === false || serverHasBusinessSchema ? null : businessSchema())
 }

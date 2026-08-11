@@ -85,6 +85,9 @@ const year = new Date().getFullYear()
 const quickLinks = [
   { to: '/our-cabs',     label: 'Our Cabs'     },
   { to: '/our-services', label: 'Our Services'  },
+  { to: '/taxi-service-chandigarh', label: 'Chandigarh Taxi' },
+  { to: '/taxi-service-ramgarh', label: 'Ramgarh Taxi & Tours' },
+  { to: '/chandigarh-airport-taxi', label: 'Airport Taxi' },
   { to: '/cities',       label: 'Cities'        },
   { to: '/about',        label: 'About Us'      },
   { to: '/contact',      label: 'Contact Us'    },

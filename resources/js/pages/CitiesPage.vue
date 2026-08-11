@@ -24,6 +24,7 @@ import AppFooter  from '../components/layout/AppFooter.vue'
 const cities = [
   { name:'Delhi',       state:'Delhi',   icon:'fa-city'       },
   { name:'Chandigarh',  state:'Punjab',  icon:'fa-building'   },
+  { name:'Ramgarh',     state:'Service area',  icon:'fa-map-marker-alt' },
   { name:'Patiala',     state:'Punjab',  icon:'fa-landmark'   },
   { name:'Ludhiana',    state:'Punjab',  icon:'fa-industry'   },
   { name:'Amritsar',    state:'Punjab',  icon:'fa-place-of-worship' },

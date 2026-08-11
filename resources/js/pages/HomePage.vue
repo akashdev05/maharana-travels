@@ -4,10 +4,10 @@
       <div class="container hero-grid">
         <div class="hero-copy">
           <p class="hero-kicker">Safe journey, royal experience</p>
-          <h1>Book a Trusted Cab for Outstation, Airport and Local Travel</h1>
+          <h1>Taxi Service in Chandigarh Tricity for Airport and Outstation Travel</h1>
           <p class="hero-text">
             Travel with professional drivers, clean vehicles, clear fares, and quick
-            support from Maharana Travels.
+            support from Maharana Travels across Zirakpur, Chandigarh, Mohali, Panchkula and Ramgarh.
           </p>
 
           <div class="hero-points">
@@ -17,14 +17,6 @@
           </div>
 
           <div class="hero-stats" aria-label="Maharana Travels highlights">
-            <div>
-              <strong>12k+</strong>
-              <span>Happy trips</span>
-            </div>
-            <div>
-              <strong>4.9</strong>
-              <span>Guest rating</span>
-            </div>
             <div>
               <strong>24/7</strong>
               <span>Live support</span>
@@ -47,7 +39,7 @@
 
     <div class="section-heading">
       <span class="section-eyebrow">Fast fare discovery</span>
-      <h3>One Way Popular Routes</h3>
+      <h2>One-Way Popular Routes</h2>
       <p>Tap a route to prefill your search and compare trusted cars instantly.</p>
     </div>
     <section class="cabs-list-section">
@@ -82,7 +74,7 @@
 
     <div class="section-heading section-heading-soft">
       <span class="section-eyebrow">Premium fleet</span>
-      <h3>Select a Car for Taxi &amp; Travel Services</h3>
+      <h2>Select a Car for Taxi &amp; Travel Services</h2>
       <p>Clean, comfortable vehicles for airport transfers, family travel, business trips, and weddings.</p>
     </div>
     <section class="cabs-section">
@@ -96,6 +88,25 @@
             @book="bookCab"
           />
         </template>
+      </div>
+    </section>
+
+    <section class="home-service-area">
+      <div class="container">
+        <div class="section-heading inline-heading">
+          <span class="section-eyebrow">Chandigarh Tricity</span>
+          <h2>Taxi bookings for local, airport and intercity travel</h2>
+          <p>Maharana Travels serves Zirakpur, Chandigarh, Mohali, Panchkula and Ramgarh with taxi booking, local sightseeing, airport transfers and listed outstation cab routes. For tour and travel planning in Chandigarh Tricity, contact the team with your itinerary so we can help arrange suitable transport.</p>
+        </div>
+        <div class="home-links">
+          <RouterLink to="/taxi-service-chandigarh">Chandigarh taxi service</RouterLink>
+          <RouterLink to="/taxi-service-zirakpur">Zirakpur taxi service</RouterLink>
+          <RouterLink to="/taxi-service-mohali">Mohali taxi service</RouterLink>
+          <RouterLink to="/taxi-service-panchkula">Panchkula taxi service</RouterLink>
+          <RouterLink to="/taxi-service-ramgarh">Ramgarh taxi &amp; tour travel services</RouterLink>
+          <RouterLink to="/chandigarh-airport-taxi">Chandigarh Airport taxi</RouterLink>
+          <RouterLink to="/delhi-airport-taxi">Delhi Airport taxi</RouterLink>
+        </div>
       </div>
     </section>
 
@@ -139,6 +150,8 @@
             <img
               :src="destination.img"
               :alt="destination.name"
+              width="800"
+              height="600"
               loading="lazy"
               @error="handleDestinationImageError"
             >
@@ -190,6 +203,7 @@ import CabCard from '../components/common/CabCard.vue'
 import LoadingSpinner from '../components/common/LoadingSpinner.vue'
 import AppFooter from '../components/layout/AppFooter.vue'
 import { phoneLink, whatsappLink } from '../utils/contactLinks'
+import { faqSchema, updateSeo } from '../composables/useSeo'
 import { getInitialSiteData } from '../utils/siteData'
 
 const router = useRouter()
@@ -226,6 +240,12 @@ function applyHomepageData(data) {
   destinations.value = data.destinations || []
   advantages.value = data.advantages || []
   faqs.value = data.faqs || []
+  updateSeo({
+    title: 'Taxi Service in Chandigarh Tricity | Maharana Travels',
+    description: 'Book Maharana Travels for taxi and tour travel services in Zirakpur, Chandigarh, Mohali, Panchkula and Ramgarh, plus airport and outstation cabs.',
+    path: '/',
+    schema: faqSchema(faqs.value),
+  })
 }
 
 function bookCab(cab, pricing) {

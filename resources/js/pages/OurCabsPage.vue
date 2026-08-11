@@ -2,7 +2,7 @@
   <div>
     <PageHeader title="OUR CABS" breadcrumb="Our Cabs" subtitle="Choose From Our Wide Range Of Vehicles" />
 
-    <div class="section-heading"><h3>Select a Car for Taxi &amp; Travel Services</h3></div>
+    <div class="section-heading"><h1>Select a Car for Taxi &amp; Travel Services</h1></div>
 
     <section class="cabs-section" style="padding-top:10px;">
       <div class="container">

@@ -1,24 +1,36 @@
 <template>
-  <div>
+  <header ref="header" class="app-header">
     <!-- ── Top Bar ── -->
     <div class="top-header">
       <div class="container">
-        <RouterLink to="/" class="logo-section">
-          <span class="logo-mark">
-            <img
-              class="site-logo"
-              src="/images/logo-180.webp"
-              alt="Maharana Travels"
-              width="180"
-              height="180"
-              fetchpriority="high"
-            >
-          </span>
-          <span class="logo-copy">
-            <span class="logo-title">Maharana Travels</span>
-            <span class="logo-tagline">Safe Journey, Royal Experience</span>
-          </span>
-        </RouterLink>
+        <div class="brand-row">
+          <RouterLink to="/" class="logo-section">
+            <span class="logo-mark">
+              <img
+                class="site-logo"
+                src="/images/logo-180.webp"
+                alt="Maharana Travels"
+                width="180"
+                height="180"
+                fetchpriority="high"
+              >
+            </span>
+            <span class="logo-copy">
+              <span class="logo-title">Maharana Travels</span>
+              <span class="logo-tagline">Safe Journey, Royal Experience</span>
+            </span>
+          </RouterLink>
+          <button
+            class="hamburger"
+            type="button"
+            :aria-expanded="menuOpen"
+            aria-controls="primary-navigation"
+            aria-label="Menu"
+            @click="menuOpen = !menuOpen"
+          >
+            <span class="hamburger-icon" :class="{ open: menuOpen }" aria-hidden="true"></span>
+          </button>
+        </div>
 
         <div class="top-actions">
           <button
@@ -50,27 +62,19 @@
             <RouterLink :to="link.to" @click="menuOpen = false">{{ link.label }}</RouterLink>
           </li>
         </ul>
-        <button
-          class="hamburger"
-          type="button"
-          :aria-expanded="menuOpen"
-          aria-controls="primary-navigation"
-          aria-label="Menu"
-          @click="menuOpen = !menuOpen"
-        >
-          <span class="hamburger-icon" :class="{ open: menuOpen }" aria-hidden="true"></span>
-        </button>
       </div>
     </nav>
-  </div>
+  </header>
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue'
+import { onBeforeUnmount, onMounted, ref } from 'vue'
 import { CONTACT_PHONE, phoneLink, whatsappLink } from '../../utils/contactLinks'
 
 const menuOpen  = ref(false)
 const theme = ref('light')
+const header = ref(null)
+let headerResizeObserver
 
 const navLinks = [
   { to: '/',             label: 'Home'        },
@@ -87,7 +91,26 @@ onMounted(() => {
   const preferredTheme = window.matchMedia?.('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
   theme.value = savedTheme || preferredTheme
   applyTheme(theme.value)
+
+  headerResizeObserver = new ResizeObserver(updateMobileHeaderHeight)
+  headerResizeObserver.observe(header.value)
+  window.addEventListener('resize', updateMobileHeaderHeight)
+  updateMobileHeaderHeight()
 })
+
+onBeforeUnmount(() => {
+  headerResizeObserver?.disconnect()
+  window.removeEventListener('resize', updateMobileHeaderHeight)
+  document.documentElement.style.removeProperty('--mobile-header-height')
+})
+
+function updateMobileHeaderHeight() {
+  if (window.matchMedia('(max-width: 768px)').matches && header.value) {
+    document.documentElement.style.setProperty('--mobile-header-height', `${header.value.offsetHeight}px`)
+  } else {
+    document.documentElement.style.removeProperty('--mobile-header-height')
+  }
+}
 
 function toggleTheme() {
   theme.value = theme.value === 'dark' ? 'light' : 'dark'

@@ -29,14 +29,18 @@
     <title>{{ $seo['title'] }}</title>
     <meta name="description" content="{{ $seo['description'] }}">
     <meta name="robots" content="{{ $seo['robots'] }}">
-    <link rel="canonical" href="{{ $seo['url'] }}">
+    @if (!empty($seo['url']))
+        <link rel="canonical" href="{{ $seo['url'] }}">
+    @endif
     <link rel="preload" as="image" href="/images/hero-travel-bg.webp" fetchpriority="high">
     <link rel="preload" as="image" href="/images/logo-180.webp" fetchpriority="high">
 
     <meta property="og:title" content="{{ $seo['title'] }}">
     <meta property="og:description" content="{{ $seo['description'] }}">
     <meta property="og:type" content="website">
-    <meta property="og:url" content="{{ $seo['url'] }}">
+    @if (!empty($seo['url']))
+        <meta property="og:url" content="{{ $seo['url'] }}">
+    @endif
     <meta property="og:image" content="{{ $seo['image'] }}">
     <meta property="og:site_name" content="Maharana Travels">
     <meta name="twitter:card" content="summary_large_image">

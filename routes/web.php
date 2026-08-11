@@ -13,10 +13,7 @@ use Illuminate\Support\Str;
 
 function site_url(string $path = ''): string
 {
-    $configured = env('APP_URL');
-    $base = $configured && !Str::contains($configured, ['localhost', '127.0.0.1'])
-        ? $configured
-        : request()->getSchemeAndHttpHost();
+    $base = config('app.url') ?: request()->getSchemeAndHttpHost();
     $base = rtrim($base, '/');
 
     return $base . '/' . ltrim($path, '/');
@@ -26,8 +23,8 @@ function static_seo_pages(): array
 {
     return [
         '/' => [
-            'title' => 'Maharana Travels | Cab Booking & Taxi Service in North India',
-            'description' => 'Book Maharana Travels for one way cabs, round trips, airport transfers and outstation taxi service with verified drivers and transparent fares.',
+            'title' => 'Taxi Service in Chandigarh Tricity | Maharana Travels',
+            'description' => 'Book Maharana Travels for taxi and tour travel services in Zirakpur, Chandigarh, Mohali, Panchkula and Ramgarh, plus airport and outstation cabs.',
             'priority' => '1.0',
         ],
         '/our-services' => [
@@ -60,6 +57,13 @@ function static_seo_pages(): array
             'description' => 'Contact Maharana Travels for cab booking, airport transfer, local taxi, outstation taxi and wedding car rental support.',
             'priority' => '0.7',
         ],
+        '/taxi-service-chandigarh' => ['title' => 'Taxi & Tour Travel Services in Chandigarh | Maharana Travels', 'description' => 'Book taxi, airport transfer, outstation and local sightseeing travel from Chandigarh with Maharana Travels.', 'priority' => '0.9'],
+        '/taxi-service-zirakpur' => ['title' => 'Taxi & Tour Travel Services in Zirakpur | Maharana Travels', 'description' => 'Book taxi, airport transfer, outstation and local sightseeing travel from Zirakpur with Maharana Travels.', 'priority' => '0.9'],
+        '/taxi-service-mohali' => ['title' => 'Taxi & Tour Travel Services in Mohali | Maharana Travels', 'description' => 'Book taxi, airport transfer, outstation and local sightseeing travel from Mohali with Maharana Travels.', 'priority' => '0.9'],
+        '/taxi-service-panchkula' => ['title' => 'Taxi & Tour Travel Services in Panchkula | Maharana Travels', 'description' => 'Book taxi, airport transfer, outstation and local sightseeing travel from Panchkula with Maharana Travels.', 'priority' => '0.9'],
+        '/taxi-service-ramgarh' => ['title' => 'Taxi & Tour Travel Services in Ramgarh | Maharana Travels', 'description' => 'Book taxi and tour travel services in Ramgarh with Maharana Travels for airport transfers, local sightseeing and outstation journeys.', 'priority' => '0.9'],
+        '/chandigarh-airport-taxi' => ['title' => 'Chandigarh Airport Taxi Service | Maharana Travels', 'description' => 'Book a Chandigarh Airport taxi with Maharana Travels for scheduled airport pickup and drop service.', 'priority' => '0.9'],
+        '/delhi-airport-taxi' => ['title' => 'Delhi Airport Taxi Service | Maharana Travels', 'description' => 'Book a Delhi Airport (IGI) taxi with Maharana Travels for scheduled airport pickup and drop service.', 'priority' => '0.9'],
     ];
 }
 
@@ -71,7 +75,13 @@ function seo_for_path(string $path): array
     $defaultImage = site_url('/images/logo-180.webp');
     $pages = static_seo_pages();
 
-    $seo = $pages[$path] ?? [
+    $nonIndexable = [
+        '/search' => ['title' => 'Search Cabs | Maharana Travels', 'description' => 'Compare available cabs and fares for your selected route with Maharana Travels.', 'robots' => 'noindex, follow'],
+        '/booking' => ['title' => 'Book a Cab Online | Maharana Travels', 'description' => 'Confirm your cab booking with Maharana Travels.', 'robots' => 'noindex, follow'],
+        '/booking/success' => ['title' => 'Booking Confirmed | Maharana Travels', 'description' => 'Your Maharana Travels cab booking request has been submitted successfully.', 'robots' => 'noindex, nofollow'],
+    ];
+
+    $seo = $pages[$path] ?? $nonIndexable[$path] ?? [
         'title' => 'Maharana Travels | Cab Booking | Taxi Service',
         'description' => 'Book reliable taxi service with Maharana Travels for one way cabs, round trips, airport transfers and outstation taxi across North India.',
     ];
@@ -90,9 +100,7 @@ function seo_for_path(string $path): array
                     'name' => $service['title'],
                     'serviceType' => 'Outstation taxi service',
                     'provider' => [
-                        '@type' => 'TaxiService',
-                        'name' => $site['name'] ?? 'Maharana Travels',
-                        'telephone' => $site['phone'] ?? '+91 9416198045',
+                        '@id' => site_url('/#business'),
                     ],
                     'areaServed' => [$service['from'], $service['to']],
                 ],
@@ -107,19 +115,20 @@ function seo_for_path(string $path): array
         'schema' => [
             '@context' => 'https://schema.org',
             '@type' => 'TaxiService',
+            '@id' => site_url('/#business'),
             'name' => $site['name'] ?? 'Maharana Travels',
             'url' => site_url('/'),
             'image' => $defaultImage,
             'telephone' => $site['phone'] ?? '+91 9416198045',
             'email' => $site['email'] ?? 'maharanatravels0001@gmail.com',
             'address' => $site['address'] ?? 'Zirakpur, Punjab',
-            'areaServed' => ['Punjab', 'Delhi NCR', 'Himachal Pradesh', 'Uttarakhand', 'North India'],
+            'areaServed' => ['Zirakpur', 'Chandigarh', 'Mohali', 'Panchkula', 'Ramgarh', 'Chandigarh Tricity', 'Delhi NCR', 'Himachal Pradesh', 'Uttarakhand'],
         ],
     ], $seo);
 }
 
 Route::get('/sitemap.xml', function () {
-    $urls = collect(static_seo_pages())->map(fn ($page, $path) => [
+    $urls = collect(static_seo_pages())->reject(fn ($page) => ($page['robots'] ?? '') === 'noindex, follow')->map(fn ($page, $path) => [
         'loc' => site_url($path),
         'priority' => $page['priority'] ?? '0.7',
     ]);
@@ -144,7 +153,26 @@ Route::get('/robots.txt', function () {
 });
 
 Route::get('/{any}', function (string $any = '') {
-    return view('app', [
-        'seo' => seo_for_path($any),
-    ]);
+    $path = '/' . trim($any, '/');
+    $path = $path === '/' ? '/' : rtrim($path, '/');
+    $knownPaths = array_merge(array_keys(static_seo_pages()), ['/search', '/booking', '/booking/success']);
+    $knownServicePaths = collect(config('travel_site.services', []))
+        ->map(fn ($service) => '/our-services/' . $service['slug'])
+        ->all();
+    $isKnown = in_array($path, $knownPaths, true) || in_array($path, $knownServicePaths, true);
+
+    $seo = seo_for_path($any);
+    if (!$isKnown) {
+        $seo = array_merge($seo, [
+            'title' => 'Page Not Found | Maharana Travels',
+            'description' => 'The page you are looking for could not be found.',
+            'robots' => 'noindex, follow',
+            'url' => null,
+            'schema' => null,
+        ]);
+    }
+
+    return response()->view('app', [
+        'seo' => $seo,
+    ], $isKnown ? 200 : 404);
 })->where('any', '.*');
