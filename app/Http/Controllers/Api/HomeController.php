@@ -87,6 +87,7 @@ class HomeController extends Controller
         $key = strtolower(preg_replace('/[^a-z0-9]/i', '', $car));
 
         return [
+            'toyotarumion' => 'rumion',
             'marutisuzukidzire' => 'dzire',
             'marutidzire' => 'dzire',
             'marutisuzukiertiga' => 'ertiga',

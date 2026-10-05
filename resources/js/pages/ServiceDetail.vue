@@ -212,6 +212,7 @@ function normalizeCar(carName) {
   const key = carName.toLowerCase().replace(/[^a-z0-9]/g, '')
 
   return {
+    toyotarumion: 'rumion',
     marutisuzukidzire: 'dzire',
     marutidzire: 'dzire',
     marutisuzukiertiga: 'ertiga',

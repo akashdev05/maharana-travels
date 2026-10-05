@@ -37,6 +37,26 @@ class CabController extends Controller
         $to        = $request->to;
         $tripType  = $request->trip_type;
         $routePrices = $this->getRoutePrices($from, $to);
+
+        if ($routePrices === null) {
+            return response()->json([
+                'data' => [],
+                'message' => 'This route requires a custom fare confirmation.',
+                'meta' => [
+                    'from' => $from,
+                    'to' => $to,
+                    'date' => $request->date,
+                    'time' => $request->time,
+                    'trip_type' => $tripType,
+                    'distance_km' => null,
+                    'fixed_price' => false,
+                    'price_available' => false,
+                    'contact_phone' => config('travel_site.site.phone'),
+                    'contact_phone_raw' => config('travel_site.site.phone_raw'),
+                ],
+            ]);
+        }
+
         $distanceKm = $this->getDistance($from, $to);
         $multiplier = $tripType === 'round-trip' ? 2 : 1;
 
@@ -80,6 +100,7 @@ class CabController extends Controller
                 'trip_type'   => $tripType,
                 'distance_km' => $distanceKm,
                 'fixed_price' => $routePrices !== null,
+                'price_available' => true,
             ],
         ]);
     }
@@ -110,6 +131,11 @@ class CabController extends Controller
             'chandigarh-ambala'     => 50,  'ambala-chandigarh'     => 50,
             'zirakpur-gurgaon'      => 260, 'gurgaon-zirakpur'      => 260,
             'zirakpur-delhiairport' => 260, 'delhiairport-zirakpur' => 260,
+            'chandigarh-hamirpur'   => 145, 'hamirpur-chandigarh'   => 145,
+            'chandigarh-solan'      => 67,  'solan-chandigarh'      => 67,
+            'chandigarh-kasauli'    => 58,  'kasauli-chandigarh'    => 58,
+            'chandigarh-kasoli'     => 58,  'kasoli-chandigarh'     => 58,
+            'chandigarh-una'        => 120, 'una-chandigarh'        => 120,
             'chandigarhairport-shimla' => 115, 'shimla-chandigarhairport' => 115,
             'chandigarh-ghaziabad'  => 295, 'ghaziabad-chandigarh'  => 295,
             'chandigarh-noida'      => 280, 'noida-chandigarh'      => 280,
@@ -163,6 +189,7 @@ class CabController extends Controller
 
         return [
             'jamu' => 'jammu',
+            'kasoli' => 'kasauli',
         ][$key] ?? $key;
     }
 
@@ -171,6 +198,7 @@ class CabController extends Controller
         $key = strtolower(preg_replace('/[^a-z0-9]/i', '', $car));
 
         return [
+            'toyotarumion' => 'rumion',
             'marutisuzukidzire' => 'dzire',
             'marutidzire' => 'dzire',
             'marutisuzukiertiga' => 'ertiga',
